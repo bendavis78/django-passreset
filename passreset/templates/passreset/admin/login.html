@@ -1,0 +1,19 @@
+{% extends "admin/login.html" %}
+{% block extrastyle %}
+  {{ block.super }}
+  <style type="text/css">
+  div.pass-reset {
+    padding: 10px 0 10px 120px;
+    clear: both;
+  }
+  #content {
+    margin-bottom: 0;
+  }
+  </style>
+{% block footer %}
+<div id="footer">
+  <div class="pass-reset">
+    <a href="{% url password-reset %}">Forgot password?</a>
+  </div>
+</div>
+{% endblock %}
