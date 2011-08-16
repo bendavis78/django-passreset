@@ -1,9 +1,6 @@
 from django.conf.urls.defaults import patterns,  url
-from django.contrib import admin
 from django.core.urlresolvers import reverse
 from django.utils.functional import lazy
-
-admin.site.login_template = 'passreset/admin/login.html'
 
 urlpatterns = patterns('django.contrib.auth.views', 
     url(r'^$', 'password_reset', name='password-reset'), 
