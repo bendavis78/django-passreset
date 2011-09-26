@@ -1,7 +1,7 @@
 =====================
 Django Password Reset
 =====================
-I could find a simple way to add password reset functionality to the vanilla Django admin site, hence this tiny little app.
+I couldn't find a simple way to add password reset functionality to the vanilla Django admin site, hence this tiny little app.
 
 Just add "passreset" to ``INSTALLED_APPS``, and the add this line to your urls.py, right above your admin url::
 
