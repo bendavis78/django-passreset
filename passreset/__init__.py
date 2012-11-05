@@ -13,14 +13,14 @@ def urls_ns(namespace, login_url=None, tpl_path=None):
     """
     if login_url is None:
         login_url = settings.LOGIN_URL
-    post_reset_redirect_done = reverse_lazy('{}:password-reset-done'.format(namespace))
-    post_reset_redirect_complete = reverse_lazy('{}:password-reset-complete'.format(namespace))
+    post_reset_redirect_done = reverse_lazy('passreset:password-reset-done', current_app=namespace)
+    post_reset_redirect_complete = reverse_lazy('passreset:password-reset-complete', current_app=namespace)
     password_reset_form = passreset_form(namespace) 
     if tpl_path is None:
-        tpl_path = namespace is not None and namespace.replace('-', '_') or 'registration'
+        tpl_path = namespace is not None and namespace.replace('-', '_') or 'passreset'
     tpl = lambda name: [
         '{}/{}'.format(tpl_path, name),
-        'registration/{}'.format(name)
+        'passreset/{}'.format(name)
     ]
     return (patterns(
         'django.contrib.auth.views', 
@@ -48,5 +48,5 @@ def urls_ns(namespace, login_url=None, tpl_path=None):
                         'current_app': namespace}),
     ), 'passreset', namespace)
 
-urls = urls_ns('passreset')
-admin_urls = urls_ns('admin-passreset', 'admin:login')
+urls = urls_ns(None)
+admin_urls = urls_ns('admin-passreset', reverse_lazy('admin:index'), tpl_path='registration')
