@@ -39,7 +39,9 @@ If you need multiple password-reset workflows for one site, you can use the
 
     include(passreset.urls_ns('profile-passreset', login_url='/profile/login'))
 
-If login_url is not supplied, settings.LOGIN_URL is used.
+If login_url is not supplied, settings.LOGIN_URL is used. You can also pass a 
+``template_path`` argument to specify a base path for templates used in the app
+instance.
 
 The ``passreset.admin_urls`` urlconf is basically a convenience shortcut for
 ``passreset.urls_ns('admin-passreset', login_url='admin:login')``. As an added
