@@ -1,20 +1,20 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='passreset', 
+    name='passreset',
     version='0.1',
     author='Ben Davis',
     author_email='bendavis78@gmail.com',
     url='http://github.com/bendavis78',
-    description='A simple app which adds password reset functionality to the Django admin site.',
+    description='Easily add password reset workflows to your django project.',
     keywords='django admin',
-    classifiers = [
+    classifiers=[
         'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
         'Topic :: Software Development :: Libraries :: Python Modules'
     ],
-    packages = find_packages(),
-    include_package_data = True
+    packages=find_packages(),
+    include_package_data=True
 )

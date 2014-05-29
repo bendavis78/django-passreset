@@ -4,6 +4,7 @@ from django.contrib.sites.models import get_current_site
 from django.template import loader, Context
 from django.utils.http import int_to_base36
 
+
 class PasswordResetForm(auth_forms.PasswordResetForm):
     """
     Kludge to get around the fact that the password email context does not
@@ -33,11 +34,14 @@ class PasswordResetForm(auth_forms.PasswordResetForm):
                 'token': token_generator.make_token(user),
                 'protocol': use_https and 'https' or 'http',
             }
-            context_instance = Context(current_app=self.current_app) 
-            subject = loader.render_to_string(subject_template_name, c, context_instance)
+            context_instance = Context(current_app=self.current_app)
+            subject = loader.render_to_string(
+                subject_template_name, c, context_instance)
+
             # Email subject *must not* contain newlines
             subject = ''.join(subject.splitlines())
-            email = loader.render_to_string(email_template_name, c, context_instance)
+            email = loader.render_to_string(
+                email_template_name, c, context_instance)
             send_mail(subject, email, from_email, [user.email])
 
 
@@ -46,4 +50,6 @@ def passreset_form(current_app):
     Form factory which adds current_app to the PasswordResetForm. This is a
     shortcut which keeps us from having to override the view from contrib.auth.
     """
-    return type('PasswordResetForm', (PasswordResetForm,), {'current_app':current_app})
+    return type('PasswordResetForm', (PasswordResetForm,), {
+        'current_app': current_app
+    })
