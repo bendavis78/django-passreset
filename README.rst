@@ -66,7 +66,9 @@ keyword argument to include:
             'staff-passreset', login_url='/staff/loging'))),
     ]
 
-If login_url is not supplied, settings.LOGIN_URL is used.
+If login_url is not supplied, settings.LOGIN_URL is used. You can also pass a 
+``template_path`` argument to specify a base path for templates used in the app
+instance.
 
 You can then reverse any of the passreset urls using the new namespace:
 
