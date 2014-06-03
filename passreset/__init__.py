@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 from django.core.urlresolvers import reverse_lazy
 from django.conf import settings
 from django.conf.urls import url
@@ -49,7 +51,7 @@ def urls_ns(namespace=app_label, login_url=None, tpl_path=None):
                 'template_name': tpl('done.html'),
                 'current_app': namespace
             }),
-        url(r'^confirm/(?P<uidb36>[-\w]+)/(?P<token>[-\w]+)/$',
+        url(r'^confirm/(?P<uidb64s>[-\w]+)/(?P<token>[-\w]+)/$',
             views.password_reset_confirm, name='confirm',
             kwargs={
                 'post_reset_redirect': post_reset_redirect_complete,
