@@ -1,9 +1,11 @@
 from __future__ import unicode_literals
 
+from django import VERSION as django_version
 from django.core.urlresolvers import reverse_lazy
 from django.conf import settings
 from django.conf.urls import url
 from django.contrib import admin
+from django.template.loader import select_template
 from passreset.forms import passreset_form
 
 default_app_config = 'passreset.apps.AppConfig'
@@ -35,6 +37,24 @@ def urls_ns(namespace=app_label, login_url=None, tpl_path=None):
         'passreset/{}'.format(name)
     ]
 
+    # django 1.6 changed the uidb32 arg to uidb64
+    if django_version[1] < 6:
+        uid_arg = 'uidb32'
+    else:
+        uid_arg = 'uidb64'
+
+    extra_context = {
+        'login_url': login_url,
+        'base_tpl': lambda: select_template(tpl('base.html')),
+        'uid_arg': uid_arg
+    }
+
+    def password_reset_confirm(*args, **kwargs):
+        # hack to make backward compatible uidb32/uidb64 arg
+        if 'uid' in kwargs:
+            kwargs[uid_arg] = kwargs.pop('uid')
+        return views.password_reset_confirm(*args, **kwargs)
+
     from django.contrib.auth import views
     return ([
         url(r'^$', views.password_reset, name='reset-password',
@@ -44,25 +64,28 @@ def urls_ns(namespace=app_label, login_url=None, tpl_path=None):
                 'template_name': tpl('reset_password.html'),
                 'email_template_name': tpl('email.html'),
                 'subject_template_name': tpl('subject.txt'),
-                'current_app': namespace
+                'current_app': namespace,
+                'extra_context': extra_context
             }),
         url(r'^done/$', views.password_reset_done, name='done',
             kwargs={
                 'template_name': tpl('done.html'),
-                'current_app': namespace
+                'current_app': namespace,
+                'extra_context': extra_context
             }),
-        url(r'^confirm/(?P<uidb64s>[-\w]+)/(?P<token>[-\w]+)/$',
-            views.password_reset_confirm, name='confirm',
+        url(r'^confirm/(?P<uid>[-\w]+)/(?P<token>[-\w]+)/$',
+            password_reset_confirm, name='confirm',
             kwargs={
                 'post_reset_redirect': post_reset_redirect_complete,
                 'template_name': tpl('confirm.html'),
-                'current_app': namespace
+                'current_app': namespace,
+                'extra_context': extra_context
             }),
         url(r'^complete/$', views.password_reset_complete, name='complete',
             kwargs={
-                'extra_context': {'login_url': login_url},
                 'template_name': tpl('complete.html'),
-                'current_app': namespace
+                'current_app': namespace,
+                'extra_context': extra_context
             }),
     ], 'passreset', namespace)
 

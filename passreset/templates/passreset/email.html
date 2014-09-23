@@ -2,9 +2,9 @@
 {% blocktrans %}You're receiving this e-mail because you requested a password reset for your user account at {{ site_name }}.{% endblocktrans %}
 
 {% trans "Please go to the following page and choose a new password:" %}
-{% block reset_link %}
-{{ protocol }}://{{ domain }}{% url "passreset:confirm" uidb36=uid token=token %}
-{% endblock %}
+{% block reset_link %}{% with current_app|add:":confirm" as confirm_url %}
+{{ protocol }}://{{ domain }}{% url confirm_url uid=uid token=token %}
+{% endwith %}{% endblock %}
 {% trans "Your username, in case you've forgotten:" %} {{ user.username }}
 
 {% trans "Thanks for using our site!" %}

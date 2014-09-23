@@ -4,7 +4,7 @@ from django.contrib.auth import forms as auth_forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.sites.models import get_current_site
-from django.template import loader, Context
+from django.template import loader, RequestContext
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
 
@@ -20,8 +20,7 @@ class PasswordResetForm(auth_forms.PasswordResetForm):
              subject_template_name='registration/password_reset_subject.txt',
              email_template_name='registration/password_reset_email.html',
              use_https=False, token_generator=default_token_generator,
-             from_email=None, request=None, html_email_template_name=None,
-             current_app=None):
+             from_email=None, request=None, html_email_template_name=None):
         """
         Generates a one-use only link for resetting password and sends to the
         user.
@@ -50,8 +49,9 @@ class PasswordResetForm(auth_forms.PasswordResetForm):
                 'user': user,
                 'token': token_generator.make_token(user),
                 'protocol': 'https' if use_https else 'http',
+                'current_app': self.current_app
             }
-            context_instance = Context(current_app=current_app)
+            context_instance = RequestContext(request)
             subject = loader.render_to_string(
                 subject_template_name, c, context_instance)
             # Email subject *must not* contain newlines
